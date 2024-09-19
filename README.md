@@ -1,50 +1,32 @@
-# React + TypeScript + Vite
+CRUD
+===
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Вам необходимо реализовать базовый CRUD без обновления при работе с HTTP.
 
-Currently, two official plugins are available:
+Backend вы можете либо написать сами, либо взять готовый из каталога `backend`.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+![CRUD](./src/assets/crud.png)
 
-## Expanding the ESLint configuration
+## Общая механика
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Первоначальная загрузка: делается http-запрос GET на адрес http://localhost:7070/notes, полученные данные отображаются в виде карточек с возможностью удаления.
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+Добавление:
+1. Вы заполняете форму и нажимаете кнопку «Добавить».
+1. Выполняется http-запрос POST на адрес http://localhost:7070/notes, в теле запроса передаётся следующий JSON:
+```json
+{
+    "id": 0,
+    "content": "То, что было введено в поле ввода"
+}
 ```
+3. После чего делается запрос на получение всех записей и происходит обновление списка — GET http://localhost:7070/notes.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+Удаление:
+1. Вы нажимаете на крестик на одной из карточек.
+1. Выполняется http-запрос DELETE на адрес http://localhost:7070/notes/{id}, где id — это идентификатор заметки.
+1. После чего делается запрос на получение всех записей и происходит обновление списка — GET http://localhost:7070/notes.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+Обновление:
+1. Вы нажимаете на кнопку «Обновить» — две зелёные стрелочки.
+1. После чего делается запрос на получение всех записей и происходит обновление списка — GET http://localhost:7070/notes.
